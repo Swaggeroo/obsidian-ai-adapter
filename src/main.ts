@@ -1,14 +1,14 @@
-import {Plugin} from 'obsidian';
-import {debugLog} from "./util";
-import {AIAdapterSettingsTab, loadSettings} from "./settings";
-import {processQueue, setProvider} from "./globals";
-import {initProvider} from "./provider";
-import {query, queryWithImage} from './api';
+import { Plugin } from "obsidian";
+import { debugLog } from "./util";
+import { AIAdapterSettingsTab, loadSettings } from "./settings";
+import { processQueue, setProvider } from "./globals";
+import { initProvider } from "./provider";
+import { query, queryWithImage } from "./api";
 
 export type AIAdapterAPI = {
 	query: (promt: string) => Promise<string>;
 	queryWithImage: (promt: string, image: string) => Promise<string>;
-}
+};
 
 export default class AIAdapterPlugin extends Plugin {
 	public api: AIAdapterAPI = {
@@ -17,7 +17,7 @@ export default class AIAdapterPlugin extends Plugin {
 	};
 
 	async onload() {
-		debugLog('loading ai adapter plugin');
+		debugLog("loading ai adapter plugin");
 		await loadSettings(this);
 
 		setProvider(initProvider());
@@ -33,8 +33,6 @@ export default class AIAdapterPlugin extends Plugin {
 
 	onunload() {
 		processQueue.clear();
-		debugLog('unloading ai adapter plugin');
+		debugLog("unloading ai adapter plugin");
 	}
 }
-
-
