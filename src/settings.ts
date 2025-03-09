@@ -20,7 +20,7 @@ interface AIAdapterPluginSettings {
 const DEFAULT_SETTINGS: AIAdapterPluginSettings = {
 	debug: false,
 	provider: "ollama",
-	selectedModel: possibleModels[0],
+	selectedModel: possibleModels[8],
 	selectedImageModel: possibleModels[0],
 	ollamaSettings: DEFAULT_OLLAMA_SETTINGS,
 };

@@ -45,6 +45,42 @@ export const possibleModels: Models[] = [
 		imageReady: true,
 		provider: "ollama",
 	},
+	{
+		name: "llama3.3 (70B)",
+		model: "llama3.3",
+		imageReady: false,
+		provider: "ollama",
+	},
+	{
+		name: "deepseek-r1 (7B)",
+		model: "deepseek-r1",
+		imageReady: false,
+		provider: "ollama",
+	},
+	{
+		name: "llama3.2 (3B)",
+		model: "llama3.2",
+		imageReady: false,
+		provider: "ollama",
+	},
+	{
+		name: "llama3.2 (1B)",
+		model: "llama3.2:1b",
+		imageReady: false,
+		provider: "ollama",
+	},
+	{
+		name: "llama3.1 (8B)",
+		model: "llama3.1",
+		imageReady: false,
+		provider: "ollama",
+	},
+	{
+		name: "llama3.1 (70B)",
+		model: "llama3.1:70b",
+		imageReady: false,
+		provider: "ollama",
+	},
 ];
 
 export const processQueue = new PQueue({ concurrency: 1, timeout: 600000 });

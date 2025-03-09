@@ -4,6 +4,7 @@ import { saveSettings, settings } from "./settings";
 import AIAdapterPlugin from "./main";
 import { debugLog } from "./util";
 import { ChatResponse, Ollama } from "ollama";
+import { Models } from "./types";
 
 let ollama: Ollama;
 
@@ -28,12 +29,13 @@ export class OllamaProvider extends Provider {
 		new Setting(containerEl).setName("Ollama").setHeading();
 
 		new Setting(containerEl)
-			.setName("Pull Model")
-			.setDesc("Pull the selected model")
+			.setName("Pull Models")
+			.setDesc("Pull the selected models")
 			.addButton((button) =>
-				button
-					.setButtonText("Pull Model")
-					.onClick(async () => await OllamaProvider.pullImage()),
+				button.setButtonText("Pull Model").onClick(async () => {
+					await OllamaProvider.pullImage(settings.selectedModel);
+					await OllamaProvider.pullImage(settings.selectedImageModel);
+				}),
 			);
 
 		new Setting(containerEl)
@@ -106,6 +108,15 @@ export class OllamaProvider extends Provider {
 					`No ${settings.selectedModel.name} model found, please make sure you have pulled it (you can pull it over the settings tab or choose another model)`,
 				);
 			}
+			if (
+				!models.models.some(
+					(model) => model.name === settings.selectedImageModel.model,
+				)
+			) {
+				new Notice(
+					`No ${settings.selectedImageModel.name} model found, please make sure you have pulled it (you can pull it over the settings tab or choose another model)`,
+				);
+			}
 		} catch (e) {
 			debugLog(e);
 			new Notice("Failed to connect to Ollama.");
@@ -113,20 +124,17 @@ export class OllamaProvider extends Provider {
 		}
 	}
 
-	static async pullImage() {
+	static async pullImage(model: Models) {
 		let progressNotice: Notice | undefined;
 		try {
 			new Notice(
-				`Pulling ${settings.selectedModel.name} model started, this may take a while...`,
+				`Pulling ${model.name} model started, this may take a while...`,
 			);
 			const response = await ollama.pull({
-				model: settings.selectedModel.model,
+				model: model.model,
 				stream: true,
 			});
-			progressNotice = new Notice(
-				`Pulling ${settings.selectedModel.name} model 0%`,
-				0,
-			);
+			progressNotice = new Notice(`Pulling ${model.name} model 0%`, 0);
 			for await (const part of response) {
 				debugLog(part);
 				if (part.total !== null && part.completed !== null) {
@@ -142,19 +150,17 @@ export class OllamaProvider extends Provider {
 						);
 						const total = (part.total / 1000000000).toFixed(2);
 						progressNotice.setMessage(
-							`Pulling ${settings.selectedModel.name} model ${roundedNumber}% (${completed}GB/${total}GB)`,
+							`Pulling ${model.name} model ${roundedNumber}% (${completed}GB/${total}GB)`,
 						);
 					}
 				}
 			}
 			progressNotice.hide();
-			new Notice(
-				`${settings.selectedModel.name} model pulled successfully`,
-			);
+			new Notice(`${model.name} model pulled successfully`);
 		} catch (e) {
 			debugLog(e);
 			progressNotice?.hide();
-			new Notice(`Failed to pull ${settings.selectedModel.name} model`);
+			new Notice(`Failed to pull ${model.name} model`);
 			new Notice(e.toString());
 		}
 	}
