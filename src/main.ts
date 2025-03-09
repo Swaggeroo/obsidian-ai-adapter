@@ -6,8 +6,8 @@ import { initProvider } from "./provider";
 import { query, queryWithImage } from "./api";
 
 export type AIAdapterAPI = {
-	query: (promt: string) => Promise<string>;
-	queryWithImage: (promt: string, image: string) => Promise<string>;
+	query: (prompt: string) => Promise<string>;
+	queryWithImage: (prompt: string, image: string) => Promise<string>;
 };
 
 export default class AIAdapterPlugin extends Plugin {
