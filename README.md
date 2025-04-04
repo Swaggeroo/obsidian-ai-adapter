@@ -1,4 +1,4 @@
-# Obsidian AI Adapter Plugin
+# AI Adapter Plugin for Obsidian
 
 This plugin is a core dependency for AI plugins in Obsidian. It provides a simple API to interact with AI services.
 

@@ -29,10 +29,10 @@ export class OllamaProvider extends Provider {
 		new Setting(containerEl).setName("Ollama").setHeading();
 
 		new Setting(containerEl)
-			.setName("Pull Models")
+			.setName("Pull models")
 			.setDesc("Pull the selected models")
 			.addButton((button) =>
-				button.setButtonText("Pull Model").onClick(async () => {
+				button.setButtonText("Pull model").onClick(async () => {
 					await OllamaProvider.pullImage(settings.selectedModel);
 					await OllamaProvider.pullImage(settings.selectedImageModel);
 				}),
@@ -56,7 +56,7 @@ export class OllamaProvider extends Provider {
 			);
 
 		new Setting(containerEl)
-			.setName("Ollama Token (Optional)")
+			.setName("Ollama token (optional)")
 			.setDesc("Set the token for authentication with the Ollama server")
 			.addText((text) =>
 				text

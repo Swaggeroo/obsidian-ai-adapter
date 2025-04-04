@@ -24,11 +24,6 @@ export default class AIAdapterPlugin extends Plugin {
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new AIAdapterSettingsTab(this.app, this));
-
-		query("Hello, World!").then((response) => {
-			debugLog(response);
-			console.log(response);
-		});
 	}
 
 	onunload() {

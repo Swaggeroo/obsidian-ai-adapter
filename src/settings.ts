@@ -103,7 +103,7 @@ export class AIAdapterSettingsTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Image Model")
+			.setName("Image model")
 			.setDesc("Select the image model to use")
 			.addDropdown((dropdown) =>
 				dropdown
