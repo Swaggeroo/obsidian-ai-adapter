@@ -31,6 +31,6 @@
 	},
 	"dependencies": {
 		"ollama": "^0.5.14",
-		"p-queue": "^8.1.0"
+		"p-queue": "^8.1.1"
 	}
 }
