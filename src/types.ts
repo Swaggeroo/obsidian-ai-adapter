@@ -5,6 +5,6 @@ export type Models = {
 	provider: Providers;
 };
 
-export type Providers = "ollama"; // | "gemini"
+export type Providers = "ollama"; // | "example" [NEW PROVIDER]
 
-export const providerNames: Providers[] = ["ollama"]; //, "gemini"];
+export const providerNames: Providers[] = ["ollama"]; //, "example"]; [NEW PROVIDER]

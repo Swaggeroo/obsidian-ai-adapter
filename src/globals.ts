@@ -1,6 +1,6 @@
 import { Models } from "./types";
 import PQueue from "p-queue";
-import { Provider } from "./provider"; // Adjust the path as necessary
+import { Provider } from "./provider";
 
 export function setProvider(p: Provider): void {
 	provider = p;
@@ -81,6 +81,18 @@ export const possibleModels: Models[] = [
 		imageReady: false,
 		provider: "ollama",
 	},
+	// { [NEW PROVIDER]
+	// 	name: "EXAMPLE IMAGE",
+	// 	model: "exampleimage",
+	// 	imageReady: true,
+	// 	provider: "testing",
+	// },
+	// {
+	// 	name: "TESTING",
+	// 	model: "test",
+	// 	imageReady: false,
+	// 	provider: "testing",
+	// },
 ];
 
 export const processQueue = new PQueue({ concurrency: 1, timeout: 600000 });
@@ -90,7 +102,6 @@ export function setUnsubscribeFunctionSetting(fn: (() => void) | null) {
 	unsubscribeFunctionSetting = fn;
 }
 
-// Simple event system for settings refresh
 const modelsChangeListeners: Array<() => void> = [];
 
 export function subscribeModelsChange(cb: () => void) {

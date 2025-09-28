@@ -42,3 +42,8 @@ export function getAIAdapter(): AIAdapterAPI | undefined {
 const text1 = await getAIAdapter()?.query(prompt);
 const text2 = await getAIAdapter()?.queryWithImage(prompt, base64String);
 ```
+
+## Adding new providers
+You can find a example provider in `src/providers/exampleProvider.ts`.
+Just create a new file in the `src/providers` folder and implement the `Provider` interface like in the example.
+Then search for `[NEW PROVIDER]` in the codebase and modify the code accordingly.

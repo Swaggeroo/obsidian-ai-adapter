@@ -3,17 +3,17 @@ import AIAdapterPlugin from "./main";
 import { Models, providerNames, Providers } from "./types";
 import {
 	DEFAULT_OLLAMA_SETTINGS,
-	OllamaProvider,
 	OllamaSettings,
-} from "./ollamaProvider";
-import { initProvider } from "./provider";
+} from "./providers/ollamaProvider";
 import {
 	possibleModels,
 	setProvider,
 	subscribeModelsChange,
 	setUnsubscribeFunctionSetting,
+	provider,
 } from "./globals";
-import { debugLog } from "./util";
+import { debugLog, initProvider } from "./util";
+// import {DEFAULT_EXAMPLE_SETTINGS, ExampleSettings} from "./exampleProvider"; [NEW PROVIDER]
 
 interface AIAdapterPluginSettings {
 	debug: boolean;
@@ -21,6 +21,7 @@ interface AIAdapterPluginSettings {
 	selectedModel: Models;
 	selectedImageModel: Models;
 	ollamaSettings: OllamaSettings;
+	// exampleSettings: ExampleSettings; [NEW PROVIDER]
 }
 
 const DEFAULT_SETTINGS: AIAdapterPluginSettings = {
@@ -29,6 +30,7 @@ const DEFAULT_SETTINGS: AIAdapterPluginSettings = {
 	selectedModel: possibleModels[8],
 	selectedImageModel: possibleModels[0],
 	ollamaSettings: DEFAULT_OLLAMA_SETTINGS,
+	// exampleSettings: DEFAULT_EXAMPLE_SETTINGS [NEW PROVIDER]
 };
 
 export let settings: AIAdapterPluginSettings = Object.assign(
@@ -81,7 +83,15 @@ export class AIAdapterSettingsTab extends PluginSettingTab {
 					.onChange(async (value: Providers) => {
 						settings.provider = value;
 						setProvider(initProvider());
+
+						settings.selectedModel =
+							provider.lastModel ?? possibleModels[0];
+
+						settings.selectedImageModel =
+							provider.lastImageModel ?? possibleModels[0];
+
 						await saveSettings(this.plugin);
+						this.display();
 					}),
 			);
 
@@ -110,6 +120,7 @@ export class AIAdapterSettingsTab extends PluginSettingTab {
 						settings.selectedModel = possibleModels.find(
 							(model) => model.name === value,
 						)!;
+						provider.setLastModel(settings.selectedModel);
 						await saveSettings(this.plugin);
 					}),
 			);
@@ -139,6 +150,7 @@ export class AIAdapterSettingsTab extends PluginSettingTab {
 						settings.selectedImageModel = possibleModels.find(
 							(model) => model.name === value,
 						)!;
+						provider.setLastImageModel(settings.selectedImageModel);
 						await saveSettings(this.plugin);
 					}),
 			);
@@ -153,6 +165,6 @@ export class AIAdapterSettingsTab extends PluginSettingTab {
 				}),
 			);
 
-		OllamaProvider.generateSettings(containerEl, this.plugin);
+		provider.generateSettings(containerEl, this.plugin);
 	}
 }

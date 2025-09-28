@@ -1,12 +1,11 @@
 import { Plugin } from "obsidian";
-import { debugLog } from "./util";
+import { debugLog, initProvider } from "./util";
 import { AIAdapterSettingsTab, loadSettings } from "./settings";
 import {
 	processQueue,
 	setProvider,
 	unsubscribeFunctionSetting,
 } from "./globals";
-import { initProvider } from "./provider";
 import { query, queryWithImage } from "./api";
 
 export type AIAdapterAPI = {

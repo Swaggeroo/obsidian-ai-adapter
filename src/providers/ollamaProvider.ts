@@ -1,32 +1,38 @@
-import { Provider } from "./provider";
+import { Provider } from "../provider";
 import { Notice, Setting } from "obsidian";
-import { saveSettings, settings } from "./settings";
-import AIAdapterPlugin from "./main";
-import { debugLog } from "./util";
+import { saveSettings, settings } from "../settings";
+import AIAdapterPlugin from "../main";
+import { debugLog } from "../util";
 import { ChatResponse, Ollama } from "ollama";
-import { Models } from "./types";
-import { notifyModelsChange, possibleModels } from "./globals";
+import { Models } from "../types";
+import { notifyModelsChange, possibleModels } from "../globals";
 
 let ollama: Ollama;
 
 export type OllamaSettings = {
 	url: string;
 	token: string;
+	lastModel: Models;
+	lastImageModel: Models;
 };
 
 export const DEFAULT_OLLAMA_SETTINGS: OllamaSettings = {
 	url: "http://127.0.0.1:11434",
 	token: "",
+	lastModel: possibleModels[8],
+	lastImageModel: possibleModels[0],
 };
 
 export class OllamaProvider extends Provider {
 	constructor() {
 		super();
+		this.lastModel = settings.ollamaSettings.lastModel;
+		this.lastImageModel = settings.ollamaSettings.lastImageModel;
 		OllamaProvider.refreshInstance();
 		this.checkOllama();
 	}
 
-	static generateSettings(containerEl: HTMLElement, plugin: AIAdapterPlugin) {
+	generateSettings(containerEl: HTMLElement, plugin: AIAdapterPlugin) {
 		new Setting(containerEl).setName("Ollama").setHeading();
 
 		new Setting(containerEl)
@@ -224,5 +230,15 @@ export class OllamaProvider extends Provider {
 				Authorization: `Bearer ${settings.ollamaSettings.token}`,
 			},
 		});
+	}
+
+	setLastModel(model: Models) {
+		super.setLastModel(model);
+		settings.ollamaSettings.lastModel = model;
+	}
+
+	setLastImageModel(model: Models) {
+		super.setLastImageModel(model);
+		settings.ollamaSettings.lastImageModel = model;
 	}
 }
