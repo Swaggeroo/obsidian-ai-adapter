@@ -81,6 +81,30 @@ export const possibleModels: Models[] = [
 		imageReady: false,
 		provider: "ollama",
 	},
+	{
+		name: "gemma3 (1B)",
+		model: "gemma3:1b",
+		imageReady: false,
+		provider: "ollama",
+	},
+	{
+		name: "gemma3 (4B)",
+		model: "gemma3:4b",
+		imageReady: true,
+		provider: "ollama",
+	},
+	{
+		name: "gemma3 (12B)",
+		model: "gemma3:12b",
+		imageReady: true,
+		provider: "ollama",
+	},
+	{
+		name: "gemma3 (27B)",
+		model: "gemma3:27b",
+		imageReady: true,
+		provider: "ollama",
+	},
 	// { [NEW PROVIDER]
 	// 	name: "EXAMPLE IMAGE",
 	// 	model: "exampleimage",
