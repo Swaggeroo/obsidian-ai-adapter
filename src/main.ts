@@ -1,7 +1,11 @@
 import { Plugin } from "obsidian";
 import { debugLog } from "./util";
 import { AIAdapterSettingsTab, loadSettings } from "./settings";
-import { processQueue, setProvider } from "./globals";
+import {
+	processQueue,
+	setProvider,
+	unsubscribeFunctionSetting,
+} from "./globals";
 import { initProvider } from "./provider";
 import { query, queryWithImage } from "./api";
 
@@ -28,6 +32,9 @@ export default class AIAdapterPlugin extends Plugin {
 
 	onunload() {
 		processQueue.clear();
+		if (unsubscribeFunctionSetting) {
+			unsubscribeFunctionSetting();
+		}
 		debugLog("unloading ai adapter plugin");
 	}
 }

@@ -1,6 +1,5 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import AIAdapterPlugin from "./main";
-import { possibleModels, setProvider } from "./globals";
 import { Models, providerNames, Providers } from "./types";
 import {
 	DEFAULT_OLLAMA_SETTINGS,
@@ -8,6 +7,13 @@ import {
 	OllamaSettings,
 } from "./ollamaProvider";
 import { initProvider } from "./provider";
+import {
+	possibleModels,
+	setProvider,
+	subscribeModelsChange,
+	setUnsubscribeFunctionSetting,
+} from "./globals";
+import { debugLog } from "./util";
 
 interface AIAdapterPluginSettings {
 	debug: boolean;
@@ -44,6 +50,12 @@ export class AIAdapterSettingsTab extends PluginSettingTab {
 	constructor(app: App, plugin: AIAdapterPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
+		setUnsubscribeFunctionSetting(
+			subscribeModelsChange(() => {
+				debugLog("Models changed, updating settings tab");
+				this.display();
+			}),
+		);
 	}
 
 	display(): void {

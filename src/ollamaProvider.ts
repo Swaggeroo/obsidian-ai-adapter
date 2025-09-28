@@ -5,6 +5,7 @@ import AIAdapterPlugin from "./main";
 import { debugLog } from "./util";
 import { ChatResponse, Ollama } from "ollama";
 import { Models } from "./types";
+import { notifyModelsChange, possibleModels } from "./globals";
 
 let ollama: Ollama;
 
@@ -99,6 +100,57 @@ export class OllamaProvider extends Provider {
 		try {
 			const models = await ollama.list();
 			debugLog(models);
+			let updated = false;
+			for (const model of models.models) {
+				const capabilities = (await ollama.show({ model: model.name }))
+					.capabilities;
+				const isImageModel = capabilities.includes("vision");
+				const isTextModel = capabilities.includes("completion");
+				const name =
+					model.name.split(":")[0] +
+					" [" +
+					model.details.parameter_size +
+					"]" +
+					" (custom)";
+
+				if (
+					isTextModel &&
+					!possibleModels.some(
+						(m) => m.model === model.name && !m.imageReady,
+					)
+				) {
+					possibleModels.push({
+						name,
+						model: model.name,
+						provider: "ollama",
+						imageReady: false,
+					});
+					debugLog("Added model: " + name);
+					updated = true;
+				}
+
+				if (
+					isImageModel &&
+					!possibleModels.some(
+						(m) => m.model === model.name && m.imageReady,
+					)
+				) {
+					possibleModels.push({
+						name,
+						model: model.name,
+						provider: "ollama",
+						imageReady: true,
+					});
+					debugLog("Added image model: " + name);
+					updated = true;
+				}
+			}
+
+			if (updated) {
+				debugLog("Models updated, notifying settings tab");
+				notifyModelsChange();
+			}
+
 			if (
 				!models.models.some(
 					(model) => model.name === settings.selectedModel.model,

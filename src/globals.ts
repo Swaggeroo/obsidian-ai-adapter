@@ -84,3 +84,23 @@ export const possibleModels: Models[] = [
 ];
 
 export const processQueue = new PQueue({ concurrency: 1, timeout: 600000 });
+
+export let unsubscribeFunctionSetting: (() => void) | null = null;
+export function setUnsubscribeFunctionSetting(fn: (() => void) | null) {
+	unsubscribeFunctionSetting = fn;
+}
+
+// Simple event system for settings refresh
+const modelsChangeListeners: Array<() => void> = [];
+
+export function subscribeModelsChange(cb: () => void) {
+	modelsChangeListeners.push(cb);
+	return () => {
+		const idx = modelsChangeListeners.indexOf(cb);
+		if (idx > -1) modelsChangeListeners.splice(idx, 1);
+	};
+}
+
+export function notifyModelsChange() {
+	modelsChangeListeners.forEach((cb) => cb());
+}
