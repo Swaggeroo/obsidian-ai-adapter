@@ -115,7 +115,7 @@ export class OllamaProvider extends Provider {
 		image: string,
 	): Promise<string> {
 		const response: ChatResponse = await ollama.chat({
-			model: settings.selectedModel.model, //llava:13b or llava or llava-llama3
+			model: settings.selectedImageModel.model, //llava:13b or llava or llava-llama3
 			messages: [{ role: "user", content: prompt, images: [image] }],
 		});
 		return response.message.content;
