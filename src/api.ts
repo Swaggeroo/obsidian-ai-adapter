@@ -10,9 +10,15 @@ export async function query(prompt: string): Promise<string> {
 	}
 
 	try {
-		return (
-			(await processQueue.add(() => provider.queryHandling(prompt))) ?? ""
-		);
+		const response: string =
+			(await processQueue.add(() => provider.queryHandling(prompt))) ??
+			"";
+		if (response.startsWith("[AI-ERROR]")) {
+			new Notice(response.replace("[AI-ERROR]", ""));
+			debugLog("AI Error: " + response);
+			return "";
+		}
+		return response;
 	} catch (e) {
 		debugLog(e);
 		return "";

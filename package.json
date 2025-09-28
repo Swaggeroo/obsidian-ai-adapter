@@ -30,6 +30,7 @@
 		"typescript": "5.8.2"
 	},
 	"dependencies": {
+		"@google/genai": "^1.21.0",
 		"ollama": "^0.6.0",
 		"p-queue": "^8.1.1"
 	}

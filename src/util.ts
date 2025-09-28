@@ -1,6 +1,7 @@
 import { settings } from "./settings";
 import { Provider } from "./provider";
 import { OllamaProvider } from "./providers/ollamaProvider";
+import { GeminiProvider } from "./providers/geminiProvider";
 // import {ExampleProvider} from "./exampleProvider"; [NEW PROVIDER]
 
 export function debugLog(message: object | string) {
@@ -13,6 +14,9 @@ export function initProvider(): Provider {
 	switch (settings.provider) {
 		case "ollama": {
 			return new OllamaProvider();
+		}
+		case "gemini": {
+			return new GeminiProvider();
 		}
 		// case "testing": { [NEW PROVIDER]
 		// 	return new ExampleProvider();

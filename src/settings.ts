@@ -13,6 +13,10 @@ import {
 	provider,
 } from "./globals";
 import { debugLog, initProvider } from "./util";
+import {
+	DEFAULT_GEMINI_SETTINGS,
+	GeminiSettings,
+} from "./providers/geminiProvider";
 // import {DEFAULT_EXAMPLE_SETTINGS, ExampleSettings} from "./exampleProvider"; [NEW PROVIDER]
 
 interface AIAdapterPluginSettings {
@@ -21,6 +25,7 @@ interface AIAdapterPluginSettings {
 	selectedModel: Models;
 	selectedImageModel: Models;
 	ollamaSettings: OllamaSettings;
+	geminiSettings: GeminiSettings;
 	// exampleSettings: ExampleSettings; [NEW PROVIDER]
 }
 
@@ -30,6 +35,7 @@ const DEFAULT_SETTINGS: AIAdapterPluginSettings = {
 	selectedModel: possibleModels[8],
 	selectedImageModel: possibleModels[0],
 	ollamaSettings: DEFAULT_OLLAMA_SETTINGS,
+	geminiSettings: DEFAULT_GEMINI_SETTINGS,
 	// exampleSettings: DEFAULT_EXAMPLE_SETTINGS [NEW PROVIDER]
 };
 
