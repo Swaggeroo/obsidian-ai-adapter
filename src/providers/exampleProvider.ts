@@ -3,7 +3,7 @@ import { Setting } from "obsidian";
 import { Provider } from "../provider";
 import { Models } from "../types";
 import { possibleModels } from "../globals";
-import { settings } from "../settings";
+// import { settings } from "../settings";
 
 export type ExampleSettings = {
 	lastModel: Models;
@@ -18,8 +18,8 @@ export const DEFAULT_EXAMPLE_SETTINGS: ExampleSettings = {
 export class ExampleProvider extends Provider {
 	constructor() {
 		super();
-		this.lastModel = settings.exampleSettings.lastModel;
-		this.lastImageModel = settings.exampleSettings.lastImageModel;
+		// this.lastModel = settings.exampleSettings.lastModel;
+		// this.lastImageModel = settings.exampleSettings.lastImageModel;
 	}
 
 	generateSettings(containerEl: HTMLElement, plugin: AIAdapterPlugin) {
@@ -36,11 +36,11 @@ export class ExampleProvider extends Provider {
 
 	setLastModel(model: Models) {
 		super.setLastModel(model);
-		settings.exampleSettings.lastModel = model;
+		// settings.exampleSettings.lastModel = model;
 	}
 
 	setLastImageModel(model: Models) {
 		super.setLastImageModel(model);
-		settings.exampleSettings.lastImageModel = model;
+		// settings.exampleSettings.lastImageModel = model;
 	}
 }
