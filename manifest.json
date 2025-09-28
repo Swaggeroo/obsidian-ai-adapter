@@ -1,7 +1,7 @@
 {
 	"id": "ai-adapter",
 	"name": "AI Adapter",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"minAppVersion": "0.15.0",
 	"description": "This is a dependency for AI plugins, providing a common interface for AI services.",
 	"author": "Swaggeroo",
