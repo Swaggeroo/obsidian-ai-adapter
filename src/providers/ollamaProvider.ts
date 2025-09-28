@@ -8,19 +8,22 @@ import { Models } from "../types";
 import { notifyModelsChange, possibleModels } from "../globals";
 
 let ollama: Ollama;
+let fallback: boolean = false;
 
 export type OllamaSettings = {
-	url: string;
-	token: string;
 	lastModel: Models;
 	lastImageModel: Models;
+	url: string;
+	fallbackUrl: string;
+	token: string;
 };
 
 export const DEFAULT_OLLAMA_SETTINGS: OllamaSettings = {
-	url: "http://127.0.0.1:11434",
-	token: "",
 	lastModel: possibleModels[8],
 	lastImageModel: possibleModels[0],
+	url: "http://127.0.0.1:11434",
+	fallbackUrl: "",
+	token: "",
 };
 
 export class OllamaProvider extends Provider {
@@ -28,7 +31,7 @@ export class OllamaProvider extends Provider {
 		super();
 		this.lastModel = settings.ollamaSettings.lastModel;
 		this.lastImageModel = settings.ollamaSettings.lastImageModel;
-		OllamaProvider.refreshInstance();
+		OllamaProvider.refreshInstance(fallback);
 		this.checkOllama();
 	}
 
@@ -57,7 +60,23 @@ export class OllamaProvider extends Provider {
 							value = DEFAULT_OLLAMA_SETTINGS.url;
 						}
 						settings.ollamaSettings.url = value;
-						OllamaProvider.refreshInstance();
+						OllamaProvider.refreshInstance(fallback);
+						this.checkOllama();
+						await saveSettings(plugin);
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName("Fallback URL (optional)")
+			.setDesc("Set an fallback URL for the Ollama server")
+			.addText((text) =>
+				text
+					.setPlaceholder("Enter the host (http://127.0.0.1:11434)")
+					.setValue(settings.ollamaSettings.fallbackUrl)
+					.onChange(async (value) => {
+						settings.ollamaSettings.fallbackUrl = value;
+						OllamaProvider.refreshInstance(fallback);
+						this.checkOllama();
 						await saveSettings(plugin);
 					}),
 			);
@@ -77,7 +96,7 @@ export class OllamaProvider extends Provider {
 							return;
 						}
 						settings.ollamaSettings.token = value;
-						OllamaProvider.refreshInstance();
+						OllamaProvider.refreshInstance(fallback);
 						await saveSettings(plugin);
 					}),
 			);
@@ -177,6 +196,13 @@ export class OllamaProvider extends Provider {
 			}
 		} catch (e) {
 			debugLog(e);
+			if (!fallback && settings.ollamaSettings.fallbackUrl?.length > 0) {
+				fallback = true;
+				debugLog("Falling back to fallback URL");
+				OllamaProvider.refreshInstance(true);
+				this.checkOllama();
+				return;
+			}
 			new Notice("Failed to connect to Ollama.");
 			new Notice(e.toString());
 		}
@@ -223,9 +249,11 @@ export class OllamaProvider extends Provider {
 		}
 	}
 
-	static refreshInstance() {
+	static refreshInstance(fallback: boolean) {
 		ollama = new Ollama({
-			host: settings.ollamaSettings.url,
+			host: !fallback
+				? settings.ollamaSettings.url
+				: settings.ollamaSettings.fallbackUrl,
 			headers: {
 				Authorization: `Bearer ${settings.ollamaSettings.token}`,
 			},
