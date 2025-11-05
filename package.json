@@ -1,6 +1,6 @@
 {
 	"name": "ai-adapter",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "This is a dependency for AI plugins, providing a common interface for AI services.",
 	"main": "main.js",
 	"scripts": {
