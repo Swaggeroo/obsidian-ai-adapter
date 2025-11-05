@@ -27,15 +27,17 @@ export class GeminiProvider extends Provider {
 		this.lastModel = settings.geminiSettings.lastModel;
 		this.lastImageModel = settings.geminiSettings.lastImageModel;
 		GeminiProvider.restartSession();
-		this.checkGemini();
+		this.checkGemini().then((success) => {
+			debugLog("Gemini check success: " + success);
+		});
 	}
 
 	generateSettings(containerEl: HTMLElement, plugin: AIAdapterPlugin) {
 		new Setting(containerEl).setName("Gemini").setHeading();
 
 		new Setting(containerEl)
-			.setName("Gemini api key")
-			.setDesc("Set the your gemini api token")
+			.setName("Gemini API key")
+			.setDesc("Set your Gemini API token")
 			.addText((text) =>
 				text
 					.setValue(
@@ -49,7 +51,9 @@ export class GeminiProvider extends Provider {
 						}
 						settings.geminiSettings.apiKey = value;
 						GeminiProvider.restartSession();
-						this.checkGemini();
+						this.checkGemini().then((success) => {
+							debugLog("Gemini check success: " + success);
+						});
 						await saveSettings(plugin);
 					}),
 			);
@@ -162,12 +166,14 @@ export class GeminiProvider extends Provider {
 				debugLog("Models updated, notifying settings tab");
 				notifyModelsChange();
 			}
+			return true;
 		} catch (e) {
 			debugLog(e);
 			new Notice(
-				"Error connecting to Gemini API. Please check your API key.",
+				"Error connecting to Gemini API. Please check your Gemini API key.",
 			);
 			new Notice(e.toString());
+			return false;
 		}
 	}
 }

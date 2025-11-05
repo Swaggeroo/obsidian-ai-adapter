@@ -32,7 +32,9 @@ export class OllamaProvider extends Provider {
 		this.lastModel = settings.ollamaSettings.lastModel;
 		this.lastImageModel = settings.ollamaSettings.lastImageModel;
 		OllamaProvider.refreshInstance(fallback);
-		this.checkOllama();
+		this.checkOllama().then((success) => {
+			debugLog("Ollama check success: " + success);
+		});
 	}
 
 	generateSettings(containerEl: HTMLElement, plugin: AIAdapterPlugin) {
@@ -61,14 +63,16 @@ export class OllamaProvider extends Provider {
 						}
 						settings.ollamaSettings.url = value;
 						OllamaProvider.refreshInstance(fallback);
-						this.checkOllama();
+						this.checkOllama().then((success) => {
+							debugLog("Ollama check success: " + success);
+						});
 						await saveSettings(plugin);
 					}),
 			);
 
 		new Setting(containerEl)
 			.setName("Fallback URL (optional)")
-			.setDesc("Set an fallback URL for the Ollama server")
+			.setDesc("Set a fallback URL for the Ollama server")
 			.addText((text) =>
 				text
 					.setPlaceholder("Enter the host (http://127.0.0.1:11434)")
@@ -76,14 +80,18 @@ export class OllamaProvider extends Provider {
 					.onChange(async (value) => {
 						settings.ollamaSettings.fallbackUrl = value;
 						OllamaProvider.refreshInstance(fallback);
-						this.checkOllama();
+						this.checkOllama().then((success) => {
+							debugLog("Ollama check success: " + success);
+						});
 						await saveSettings(plugin);
 					}),
 			);
 
 		new Setting(containerEl)
 			.setName("Ollama token (optional)")
-			.setDesc("Set the token for authentication with the Ollama server")
+			.setDesc(
+				"Set the token used to authenticate with the Ollama server",
+			)
 			.addText((text) =>
 				text
 					.setValue(
@@ -121,7 +129,7 @@ export class OllamaProvider extends Provider {
 		return response.message.content;
 	}
 
-	private async checkOllama() {
+	private async checkOllama(): Promise<boolean> {
 		try {
 			const models = await ollama.list();
 			debugLog(models);
@@ -194,17 +202,18 @@ export class OllamaProvider extends Provider {
 					`No ${settings.selectedImageModel.name} model found, please make sure you have pulled it (you can pull it over the settings tab or choose another model)`,
 				);
 			}
+			return true;
 		} catch (e) {
 			debugLog(e);
 			if (!fallback && settings.ollamaSettings.fallbackUrl?.length > 0) {
 				fallback = true;
 				debugLog("Falling back to fallback URL");
 				OllamaProvider.refreshInstance(true);
-				this.checkOllama();
-				return;
+				return await this.checkOllama();
 			}
-			new Notice("Failed to connect to Ollama.");
+			new Notice("Error connecting to Ollama.");
 			new Notice(e.toString());
+			return false;
 		}
 	}
 

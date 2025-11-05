@@ -6,7 +6,7 @@ import { GeminiProvider } from "./providers/geminiProvider";
 
 export function debugLog(message: object | string) {
 	if (settings.debug) {
-		console.log(message);
+		console.debug(message);
 	}
 }
 
