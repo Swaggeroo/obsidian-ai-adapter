@@ -1,3 +1,9 @@
+# 🚨 DEPRICATED 🚨
+This plugin was denied by the Obsidian team: https://github.com/obsidianmd/obsidian-releases/pull/5646#issuecomment-3494809402
+
+This plugin has been integrated into the [ai-image-analyzer
+ plugin](https://github.com/Swaggeroo/obsidian-ai-image-analyzer)
+
 # AI Adapter Plugin for Obsidian
 
 This plugin is a core dependency for AI plugins in Obsidian. It provides a simple API to interact with AI services.
